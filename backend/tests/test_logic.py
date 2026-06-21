@@ -1,4 +1,5 @@
 from app.logic import (
+    build_context_description,
     calculate_emissions,
     calculate_new_streak,
     generate_nudges
@@ -47,3 +48,8 @@ def test_generate_nudges():
     assert "transit" in types
     assert "diet" in types
     assert "energy" in types
+
+
+def test_build_context_description_for_large_savings():
+    description = build_context_description(15000.0)
+    assert "tree" in description.lower()

@@ -1,126 +1,14 @@
-from datetime import datetime, timezone
-from typing import Dict, Any, List
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Set
 
-# Seed Coefficients Matrix
-EMISSION_FACTORS = {
-    "transit": {
-        "solo_petrol": 270.0,
-        "solo_diesel": 290.0,
-        "ev_rideshare": 100.0,
-        "bus": 60.0,
-        "train": 40.0,
-        "active": 0.0
-    },
-    "food": {
-        "beef_lamb": 3000.0,
-        "pork_poultry": 600.0,
-        "vegetarian_fish": 400.0,
-        "vegan": 200.0
-    },
-    "energy": {
-        "ac_standard": 1200.0,
-        "ac_eco": 300.0,
-        "fan_only": 40.0,
-        "ventilation": 0.0
-    },
-    "shopping": {
-        "fast_fashion": 15000.0,
-        "electronics_small": 30000.0,
-        "second_hand": 500.0,
-        "groceries_typical": 1500.0
-    }
-}
-
-BASELINE_MAPPING = {
-    "transit": {
-        "solo_petrol": "solo_petrol",
-        "carpool": "ev_rideshare",
-        "transit": "bus",
-        "active": "active"
-    },
-    "diet": {
-        "high_meat": "beef_lamb",
-        "low_meat": "pork_poultry",
-        "vegetarian": "vegetarian_fish",
-        "vegan": "vegan"
-    },
-    "energy": {
-        "ac_always": "ac_standard",
-        "eco_mode": "ac_eco",
-        "ventilation": "ventilation"
-    }
-}
-
-def get_baseline_choice(category: str, selected_choice: str, user_baseline: Dict[str, str]) -> str:
-    """
-    Determines the baseline equivalent choice key based on user baseline preferences or defaults.
-    """
-    if category == "transit":
-        pref = user_baseline.get("transit", "solo_petrol")
-        return BASELINE_MAPPING["transit"].get(pref, "solo_petrol")
-    elif category == "food":
-        pref = user_baseline.get("diet", "high_meat")
-        return BASELINE_MAPPING["diet"].get(pref, "beef_lamb")
-    elif category == "energy":
-        pref = user_baseline.get("energy", "ac_always")
-        return BASELINE_MAPPING["energy"].get(pref, "ac_standard")
-    elif category == "shopping":
-        # Dynamic baseline for shopping: second_hand avoids new fast_fashion
-        if selected_choice == "second_hand":
-            return "fast_fashion"
-        return selected_choice
-    return selected_choice
-
-def calculate_emissions(category: str, selected_choice: str, amount: float, user_baseline: Dict[str, str]) -> Dict[str, Any]:
-    """
-    Computes emissions, baseline equivalent emissions, savings, and equivalencies.
-    All calculations are returned normalized to single decimal floats.
-    """
-    baseline_choice = get_baseline_choice(category, selected_choice, user_baseline)
-    
-    # Get coefficients
-    ef_selected = EMISSION_FACTORS.get(category, {}).get(selected_choice, 0.0)
-    ef_baseline = EMISSION_FACTORS.get(category, {}).get(baseline_choice, 0.0)
-    
-    actual_emissions = amount * ef_selected
-    baseline_emissions = amount * ef_baseline
-    saved_emissions = baseline_emissions - actual_emissions
-    
-    # Calculate utility equivalencies (based on saved grams)
-    phone_charges = round(max(0.0, saved_emissions / 8.33), 1)
-    tv_hours = round(max(0.0, saved_emissions / 50.0), 1)
-    forest_progress = round(max(0.0, saved_emissions / 12000.0), 4)  # High-precision forest tree increment
-    fridge_hours = round(max(0.0, saved_emissions / 100.0), 1)  # Avg fridge ~100g CO2e/hr
-    tree_days = round(max(0.0, saved_emissions / 33.0), 1)      # 1 tree absorbs ~12kg/year ≈ 33g/day
-
-    # Build a rich, human-readable equivalence string
-    context_desc = "No carbon saved vs. your baseline"
-    if saved_emissions > 0:
-        if saved_emissions >= 12000:
-            trees = round(saved_emissions / 12000.0, 1)
-            context_desc = f"Like planting {trees} tree{'s' if trees != 1.0 else ''} — impressive!"
-        elif saved_emissions >= 3000:
-            context_desc = f"Like running your fridge for {round(fridge_hours / 24, 1)} days"
-        elif saved_emissions >= 1000:
-            context_desc = f"Equivalent to avoiding a {round(saved_emissions / 270.0, 1)}-mile petrol car trip"
-        elif saved_emissions >= 100:
-            context_desc = f"Equivalent to {int(phone_charges)} smartphone charges or {int(tv_hours)} hours of TV"
-        else:
-            context_desc = f"Saved {int(saved_emissions)}g CO2e — every gram counts!"
-
-    return {
-        "selectedChoice": selected_choice,
-        "baselineEquivalentChoice": baseline_choice,
-        "carbonGrams": round(actual_emissions, 1),
-        "baselineCarbonGrams": round(baseline_emissions, 1),
-        "savedGrams": round(saved_emissions, 1),
-        "phoneCharges": phone_charges,
-        "tvHours": tv_hours,
-        "fridgeHours": fridge_hours,
-        "treeDays": tree_days,
-        "forestProgress": forest_progress,
-        "contextEquivalence": context_desc
-    }
+from app.services.emissions import (
+    EMISSION_FACTORS,
+    LOW_CARBON_TRANSIT_CHOICES,
+    SOLO_TRANSPORT_CHOICES,
+    build_context_description,
+    calculate_emissions,
+    get_baseline_choice,
+)
 
 def calculate_new_streak(last_logged_str: str, current_streak: int, new_log_date_str: str) -> int:
     """
@@ -161,6 +49,20 @@ def _find_highest_emission_category(activities: List[Dict[str, Any]]) -> str:
     return max(totals, key=lambda k: totals[k]) if totals else ""
 
 
+def _filter_activity_logs(
+    activities: List[Dict[str, Any]],
+    category: str,
+    selected_choices: Optional[Set[str]] = None,
+) -> List[Dict[str, Any]]:
+    """Filters activities by category and an optional set of selected choices."""
+    return [
+        activity
+        for activity in activities
+        if activity.get("category") == category
+        and (selected_choices is None or activity.get("selectedChoice") in selected_choices)
+    ]
+
+
 def generate_nudges(activities: List[Dict[str, Any]], baseline: Dict[str, str]) -> List[Dict[str, Any]]:
     """
     Generates up to 4 personalised, context-aware nudges based on the user's logged
@@ -175,16 +77,16 @@ def generate_nudges(activities: List[Dict[str, Any]], baseline: Dict[str, str]) 
     """
     nudges: List[Dict[str, Any]] = []
 
-    transit_logs = [a for a in activities if a.get("category") == "transit"]
-    beef_logs = [a for a in activities if a.get("category") == "food" and a.get("selectedChoice") == "beef_lamb"]
-    vegan_logs = [a for a in activities if a.get("category") == "food" and a.get("selectedChoice") == "vegan"]
-    ac_logs = [a for a in activities if a.get("category") == "energy" and a.get("selectedChoice") == "ac_standard"]
-    fashion_logs = [a for a in activities if a.get("category") == "shopping" and a.get("selectedChoice") == "fast_fashion"]
-    second_hand_logs = [a for a in activities if a.get("category") == "shopping" and a.get("selectedChoice") == "second_hand"]
+    transit_logs = _filter_activity_logs(activities, "transit")
+    beef_logs = _filter_activity_logs(activities, "food", {"beef_lamb"})
+    vegan_logs = _filter_activity_logs(activities, "food", {"vegan"})
+    ac_logs = _filter_activity_logs(activities, "energy", {"ac_standard"})
+    fashion_logs = _filter_activity_logs(activities, "shopping", {"fast_fashion"})
+    second_hand_logs = _filter_activity_logs(activities, "shopping", {"second_hand"})
 
     # --- Rule 1: Transit ---
-    solo_trips = sum(1 for a in transit_logs if a.get("selectedChoice") in ["solo_petrol", "solo_diesel"])
-    low_carbon_trips = sum(1 for a in transit_logs if a.get("selectedChoice") in ["bus", "train", "active", "ev_rideshare"])
+    solo_trips = sum(1 for a in transit_logs if a.get("selectedChoice") in SOLO_TRANSPORT_CHOICES)
+    low_carbon_trips = sum(1 for a in transit_logs if a.get("selectedChoice") in LOW_CARBON_TRANSIT_CHOICES)
     if solo_trips >= 3:
         nudges.append({
             "type": "transit",

@@ -9,18 +9,14 @@ import NudgesPanel from "./components/NudgesPanel.tsx";
 import ChallengePanel from "./components/ChallengePanel.tsx";
 import ImpactSummary from "./components/ImpactSummary.tsx";
 import { Leaf, Info } from "lucide-react";
+import { NAV_ITEMS, PAGE_TITLES } from "./constants/navigation";
 
 const AppShell = () => {
   const { currentRoute, setCurrentRoute, profile, isLoading, isOffline } = useApp();
 
   // Dynamic page title for SEO and screen readers
   useEffect(() => {
-    const titles: Record<string, string> = {
-      "/": "Dashboard — CarbonAware",
-      "/simulator": "What-If Simulator — CarbonAware",
-      "/history": "Activity Logs — CarbonAware",
-    };
-    document.title = titles[currentRoute] || "CarbonAware";
+    document.title = PAGE_TITLES[currentRoute] || "CarbonAware";
   }, [currentRoute]);
 
   const handleRouteClick = (e: React.MouseEvent, route: string) => {
@@ -42,27 +38,16 @@ const AppShell = () => {
           </a>
           
           <nav className="nav-links" role="navigation" aria-label="Main Navigation">
-            <button 
-              className={`nav-btn ${currentRoute === "/" ? "active" : ""}`}
-              onClick={(e) => handleRouteClick(e, "/")}
-              aria-current={currentRoute === "/" ? "page" : undefined}
-            >
-              Dashboard
-            </button>
-            <button 
-              className={`nav-btn ${currentRoute === "/simulator" ? "active" : ""}`}
-              onClick={(e) => handleRouteClick(e, "/simulator")}
-              aria-current={currentRoute === "/simulator" ? "page" : undefined}
-            >
-              What-If Simulator
-            </button>
-            <button 
-              className={`nav-btn ${currentRoute === "/history" ? "active" : ""}`}
-              onClick={(e) => handleRouteClick(e, "/history")}
-              aria-current={currentRoute === "/history" ? "page" : undefined}
-            >
-              My Activity Logs
-            </button>
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.route}
+                className={`nav-btn ${currentRoute === item.route ? "active" : ""}`}
+                onClick={(e) => handleRouteClick(e, item.route)}
+                aria-current={currentRoute === item.route ? "page" : undefined}
+              >
+                {item.label}
+              </button>
+            ))}
           </nav>
         </div>
       </header>
@@ -91,7 +76,7 @@ const AppShell = () => {
       {/* Main Layout Content Router */}
       <main id="main-content" className="main-content">
         {isLoading ? (
-          <div style={{ textAlign: "center", padding: "100px 0", color: "var(--text-secondary)" }}>
+          <div style={{ textAlign: "center", padding: "100px 0", color: "var(--text-secondary)" }} role="status" aria-live="polite">
             <div style={{ marginBottom: "16px", fontSize: "var(--font-lg)" }}>Loading your Carbon Forest...</div>
             <div className="spinner"></div>
           </div>

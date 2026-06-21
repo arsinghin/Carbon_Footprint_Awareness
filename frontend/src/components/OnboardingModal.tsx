@@ -25,6 +25,23 @@ const OnboardingModal = () => {
       'button, select, input, [tabindex]:not([tabindex="-1"])'
     );
     if (focusable && focusable.length > 0) focusable[0].focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || !focusable || focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [step]);
 
   const handleSubmit = async () => {
@@ -107,6 +124,7 @@ const OnboardingModal = () => {
             </div>
 
             <button
+              type="button"
               onClick={() => setStep(2)}
               style={{
                 width: "100%", padding: "14px", background: "var(--accent-emerald)",
@@ -148,6 +166,7 @@ const OnboardingModal = () => {
             </div>
 
             <button
+              type="button"
               onClick={handleSubmit}
               style={{
                 width: "100%", padding: "14px", background: "var(--accent-blue)",

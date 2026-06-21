@@ -80,9 +80,18 @@ body {
 }
 
 /* Global focus state rules */
-input:focus, select:focus, textarea:focus, button:focus, [role="button"]:focus {
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, [role="button"]:focus-visible, a:focus-visible {
   outline: 3px solid var(--accent-blue);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Glassmorphic layout wrapper */
