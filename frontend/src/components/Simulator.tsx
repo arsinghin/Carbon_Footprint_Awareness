@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useApp } from "../context/AppContext.tsx";
 import { Sliders } from "lucide-react";
 
@@ -14,27 +14,27 @@ const FACTORS: Record<string, Record<string, { label: string; grams: number }>> 
   transit: {
     solo_petrol: { label: "Solo Petrol Car", grams: 270.0 },
     ev_rideshare: { label: "EV / Rideshare", grams: 100.0 },
-    bus:          { label: "Public Bus", grams: 60.0 },
-    train:        { label: "Train / Metro", grams: 40.0 },
-    active:       { label: "Walk / Bicycle", grams: 0.0 },
+    bus: { label: "Public Bus", grams: 60.0 },
+    train: { label: "Train / Metro", grams: 40.0 },
+    active: { label: "Walk / Bicycle", grams: 0.0 },
   },
   food: {
-    beef_lamb:       { label: "Beef / Lamb", grams: 3000.0 },
-    pork_poultry:    { label: "Pork / Poultry", grams: 600.0 },
+    beef_lamb: { label: "Beef / Lamb", grams: 3000.0 },
+    pork_poultry: { label: "Pork / Poultry", grams: 600.0 },
     vegetarian_fish: { label: "Vegetarian / Fish", grams: 400.0 },
-    vegan:           { label: "Vegan Meal", grams: 200.0 },
+    vegan: { label: "Vegan Meal", grams: 200.0 },
   },
   energy: {
     ac_standard: { label: "Standard AC", grams: 1200.0 },
-    ac_eco:      { label: "Eco-mode AC", grams: 300.0 },
-    fan_only:    { label: "Fans Only", grams: 40.0 },
+    ac_eco: { label: "Eco-mode AC", grams: 300.0 },
+    fan_only: { label: "Fans Only", grams: 40.0 },
     ventilation: { label: "Natural Ventilation", grams: 0.0 },
   },
   shopping: {
-    fast_fashion:     { label: "Fast Fashion Item", grams: 15000.0 },
-    electronics_small:{ label: "Small Electronics", grams: 30000.0 },
-    groceries_typical:{ label: "Typical Groceries", grams: 1500.0 },
-    second_hand:      { label: "Second-hand Item", grams: 500.0 },
+    fast_fashion: { label: "Fast Fashion Item", grams: 15000.0 },
+    electronics_small: { label: "Small Electronics", grams: 30000.0 },
+    groceries_typical: { label: "Typical Groceries", grams: 1500.0 },
+    second_hand: { label: "Second-hand Item", grams: 500.0 },
   },
 };
 
@@ -47,8 +47,8 @@ const UNITS: Record<string, string> = {
 
 const BASELINE_MAP: Record<string, Record<string, string>> = {
   transit: { solo_petrol: "solo_petrol", carpool: "ev_rideshare", transit: "bus", active: "active" },
-  diet:    { high_meat: "beef_lamb", low_meat: "pork_poultry", vegetarian: "vegetarian_fish", vegan: "vegan" },
-  energy:  { ac_always: "ac_standard", eco_mode: "ac_eco", ventilation: "ventilation" },
+  diet: { high_meat: "beef_lamb", low_meat: "pork_poultry", vegetarian: "vegetarian_fish", vegan: "vegan" },
+  energy: { ac_always: "ac_standard", eco_mode: "ac_eco", ventilation: "ventilation" },
 };
 
 const Simulator = () => {
@@ -98,7 +98,7 @@ const Simulator = () => {
         What-If Simulator
       </h2>
       <p style={{ color: "var(--text-secondary)", marginBottom: "24px", lineHeight: "1.5" }}>
-        Compare alternatives side-by-side. Select a category, adjust the amount, and instantly see 
+        Compare alternatives side-by-side. Select a category, adjust the amount, and instantly see
         how each choice stacks up against <strong style={{ color: "var(--text-primary)" }}>your personal baseline</strong>.
       </p>
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { useApp } from "../context/AppContext.tsx";
 import { PieChart, TrendingDown, AlertTriangle } from "lucide-react";
 
@@ -46,7 +45,7 @@ const ImpactSummary = () => {
 
   // Build per-category breakdown from real logged data
   const breakdownMap: Record<string, { totalGrams: number; totalSaved: number; count: number }> = {};
-  
+
   for (const act of activities) {
     const cat = act.category;
     if (!breakdownMap[cat]) {
