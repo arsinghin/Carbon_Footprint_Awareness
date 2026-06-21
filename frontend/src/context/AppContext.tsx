@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 export interface Activity {
   activityId: string;
@@ -329,7 +329,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const updatedSavings = round(Math.max(0, (profile?.cumulativeSavedKg || 0) - removedSavedKg), 1);
     localStorage.setItem("local_activities", JSON.stringify(updatedLogs));
     localStorage.setItem("local_saved_kg", updatedSavings.toString());
-    
+
     // Recalculate streak
     const prevDate = updatedLogs.length > 0 ? updatedLogs[0].timestamp.split("T")[0] : "";
     localStorage.setItem("local_streak_date", prevDate);

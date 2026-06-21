@@ -1,4 +1,3 @@
-import React from "react";
 import { useApp } from "../context/AppContext.tsx";
 import { Award, CheckCircle } from "lucide-react";
 
@@ -47,9 +46,9 @@ const ChallengePanel = () => {
           <span>{completedSwaps} / {targetSwaps}</span>
         </div>
         <div style={{ width: "100%", height: "8px", background: "rgba(255, 255, 255, 0.1)", borderRadius: "4px", overflow: "hidden" }}>
-          <div style={{ 
-            width: `${progressPercent}%`, 
-            height: "100%", 
+          <div style={{
+            width: `${progressPercent}%`,
+            height: "100%",
             background: isCompleted ? "var(--accent-emerald)" : "var(--accent-blue)",
             transition: "width 0.5s ease"
           }} />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useApp } from "../context/AppContext.tsx";
 import { Plus, X, Navigation, Utensils, Zap, ShoppingBag } from "lucide-react";
 
@@ -27,7 +27,7 @@ const QuickLogFAB = () => {
 
   return (
     <>
-      <button 
+      <button
         onClick={handleOpen}
         style={{
           position: "fixed", bottom: "32px", right: "32px",
@@ -50,7 +50,7 @@ const QuickLogFAB = () => {
               <h2 id="log-title" style={{ fontSize: "var(--font-xl)" }}>
                 {category ? `Log ${category.charAt(0).toUpperCase() + category.slice(1)}` : "Log Activity"}
               </h2>
-              <button 
+              <button
                 onClick={() => setIsOpen(false)}
                 style={{ background: "none", border: "none", color: "var(--text-secondary)", cursor: "pointer" }}
                 aria-label="Close modal"
@@ -91,7 +91,7 @@ const QuickLogFAB = () => {
                     <input type="number" min="0.1" step="0.1" value={amount} onChange={e => setAmount(Number(e.target.value))} style={selectStyle} />
                   </>
                 )}
-                
+
                 {category === "food" && (
                   <>
                     <label style={{ display: "block", marginBottom: "8px" }}>Meal Type</label>
@@ -135,13 +135,13 @@ const QuickLogFAB = () => {
                 )}
 
                 <div style={{ marginTop: "24px", display: "flex", gap: "12px" }}>
-                  <button 
+                  <button
                     onClick={() => setCategory(null)}
                     style={{ flex: 1, padding: "12px", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", border: "1px solid var(--border-muted)", borderRadius: "8px", cursor: "pointer" }}
                   >
                     Back
                   </button>
-                  <button 
+                  <button
                     onClick={handleSubmit}
                     disabled={isSubmitting}
                     style={{ flex: 2, padding: "12px", background: "var(--accent-emerald)", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}
@@ -166,8 +166,8 @@ const btnStyle = {
 };
 
 const selectStyle = {
-  width: "100%", padding: "12px", borderRadius: "8px", 
-  background: "rgba(0,0,0,0.2)", color: "var(--text-primary)", 
+  width: "100%", padding: "12px", borderRadius: "8px",
+  background: "rgba(0,0,0,0.2)", color: "var(--text-primary)",
   border: "1px solid var(--border-muted)"
 };
 

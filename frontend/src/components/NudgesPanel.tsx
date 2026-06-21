@@ -1,4 +1,3 @@
-import React from "react";
 import { useApp } from "../context/AppContext.tsx";
 import { Lightbulb, Navigation, Utensils, Zap } from "lucide-react";
 
@@ -20,7 +19,7 @@ const NudgesPanel = () => {
         <Lightbulb className="w-5 h-5 text-yellow-400" style={{ color: "#facc15" }} />
         Smart Assistant Insights
       </h3>
-      
+
       {nudges.length === 0 ? (
         <p style={{ color: "var(--text-muted)", fontSize: "var(--font-sm)" }}>
           Log more activities to receive personalized insights and recommendations.
@@ -28,22 +27,22 @@ const NudgesPanel = () => {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {nudges.map((nudge, i) => (
-            <div 
+            <div
               key={i}
-              style={{ 
-                background: "rgba(255, 255, 255, 0.03)", 
+              style={{
+                background: "rgba(255, 255, 255, 0.03)",
                 border: "1px solid var(--border-muted)",
-                borderRadius: "12px", 
+                borderRadius: "12px",
                 padding: "16px",
                 display: "flex",
                 gap: "16px",
                 alignItems: "flex-start"
               }}
             >
-              <div style={{ 
-                background: "rgba(255, 255, 255, 0.05)", 
-                padding: "10px", 
-                borderRadius: "50%" 
+              <div style={{
+                background: "rgba(255, 255, 255, 0.05)",
+                padding: "10px",
+                borderRadius: "50%"
               }}>
                 {getIcon(nudge.type)}
               </div>

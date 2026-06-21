@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Simulator = () => {
   const [distance, setDistance] = useState(10);
@@ -25,11 +25,11 @@ const Simulator = () => {
           <span>Trip Distance</span>
           <span style={{ color: "var(--accent-emerald)" }}>{distance} miles</span>
         </label>
-        <input 
-          type="range" 
-          min="1" 
-          max="100" 
-          value={distance} 
+        <input
+          type="range"
+          min="1"
+          max="100"
+          value={distance}
           onChange={(e) => setDistance(Number(e.target.value))}
           style={{ width: "100%", cursor: "pointer", accentColor: "var(--accent-emerald)" }}
           aria-label="Trip distance in miles"

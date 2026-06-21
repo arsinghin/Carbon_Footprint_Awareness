@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useApp } from "../context/AppContext.tsx";
 
 const OnboardingModal = () => {
@@ -26,8 +26,8 @@ const OnboardingModal = () => {
 
             <div style={{ marginBottom: "20px" }}>
               <label style={{ display: "block", marginBottom: "8px", fontWeight: "600" }}>How do you usually commute?</label>
-              <select 
-                value={transit} 
+              <select
+                value={transit}
                 onChange={(e) => setTransit(e.target.value)}
                 style={{ width: "100%", padding: "12px", borderRadius: "8px", background: "var(--bg-base)", color: "var(--text-primary)", border: "1px solid var(--border-muted)" }}
                 aria-label="Select usual commute method"
@@ -41,8 +41,8 @@ const OnboardingModal = () => {
 
             <div style={{ marginBottom: "20px" }}>
               <label style={{ display: "block", marginBottom: "8px", fontWeight: "600" }}>What is your typical diet?</label>
-              <select 
-                value={diet} 
+              <select
+                value={diet}
                 onChange={(e) => setDiet(e.target.value)}
                 style={{ width: "100%", padding: "12px", borderRadius: "8px", background: "var(--bg-base)", color: "var(--text-primary)", border: "1px solid var(--border-muted)" }}
                 aria-label="Select typical diet"
@@ -56,8 +56,8 @@ const OnboardingModal = () => {
 
             <div style={{ marginBottom: "32px" }}>
               <label style={{ display: "block", marginBottom: "8px", fontWeight: "600" }}>How do you manage home temperature?</label>
-              <select 
-                value={energy} 
+              <select
+                value={energy}
                 onChange={(e) => setEnergy(e.target.value)}
                 style={{ width: "100%", padding: "12px", borderRadius: "8px", background: "var(--bg-base)", color: "var(--text-primary)", border: "1px solid var(--border-muted)" }}
                 aria-label="Select home temperature management"
@@ -68,7 +68,7 @@ const OnboardingModal = () => {
               </select>
             </div>
 
-            <button 
+            <button
               onClick={() => setStep(2)}
               style={{ width: "100%", padding: "14px", background: "var(--accent-emerald)", color: "white", border: "none", borderRadius: "8px", fontSize: "var(--font-base)", fontWeight: "600", cursor: "pointer" }}
             >
@@ -90,8 +90,8 @@ const OnboardingModal = () => {
                 Let's try to save 5 trees this month together by making small, realistic swaps!
               </p>
             </div>
-            
-            <button 
+
+            <button
               onClick={handleSubmit}
               style={{ width: "100%", padding: "14px", background: "var(--accent-blue)", color: "white", border: "none", borderRadius: "8px", fontSize: "var(--font-base)", fontWeight: "600", cursor: "pointer" }}
             >

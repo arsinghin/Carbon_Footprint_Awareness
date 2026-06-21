@@ -1,4 +1,3 @@
-import React from "react";
 import { useApp } from "../context/AppContext.tsx";
 import { ArrowLeft } from "lucide-react";
 
@@ -16,9 +15,9 @@ const HistoryList = () => {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
         <h2 style={{ fontSize: "var(--font-2xl)" }}>My Activity Logs</h2>
         {activities.length > 0 && (
-          <button 
+          <button
             onClick={handleUndo}
-            style={{ 
+            style={{
               display: "flex", alignItems: "center", gap: "6px",
               background: "rgba(255, 255, 255, 0.05)", border: "1px solid var(--border-muted)",
               padding: "8px 12px", borderRadius: "6px", color: "var(--text-primary)", cursor: "pointer"
