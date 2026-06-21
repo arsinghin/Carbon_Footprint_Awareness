@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AppProvider, useApp } from "./context/AppContext.tsx";
 import OnboardingModal from "./components/OnboardingModal.tsx";
 import DigitalForest from "./components/DigitalForest.tsx";
@@ -7,10 +7,21 @@ import Simulator from "./components/Simulator.tsx";
 import HistoryList from "./components/HistoryList.tsx";
 import NudgesPanel from "./components/NudgesPanel.tsx";
 import ChallengePanel from "./components/ChallengePanel.tsx";
+import ImpactSummary from "./components/ImpactSummary.tsx";
 import { Leaf, Info } from "lucide-react";
 
 const AppShell = () => {
   const { currentRoute, setCurrentRoute, profile, isLoading, isOffline } = useApp();
+
+  // Dynamic page title for SEO and screen readers
+  useEffect(() => {
+    const titles: Record<string, string> = {
+      "/": "Dashboard — CarbonAware",
+      "/simulator": "What-If Simulator — CarbonAware",
+      "/history": "Activity Logs — CarbonAware",
+    };
+    document.title = titles[currentRoute] || "CarbonAware";
+  }, [currentRoute]);
 
   const handleRouteClick = (e: React.MouseEvent, route: string) => {
     e.preventDefault();
@@ -99,6 +110,7 @@ const AppShell = () => {
                   <NudgesPanel />
                   <ChallengePanel />
                 </div>
+                <ImpactSummary />
                 <div className="card">
                   <h3 className="card-title">
                     <Leaf className="w-5 h-5 text-emerald-500" />

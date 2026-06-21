@@ -54,7 +54,17 @@ class MockMemoryRepository(BaseRepository):
                     },
                     "cumulativeSavedKg": 0.0
                 }
-            self._users[user_id].update(data)
+            # Deep merge to preserve nested dict keys
+            self._deep_merge(self._users[user_id], data)
+
+    @staticmethod
+    def _deep_merge(target: Dict[str, Any], source: Dict[str, Any]) -> None:
+        """Recursively merges source into target without overwriting nested keys not present in source."""
+        for key, value in source.items():
+            if key in target and isinstance(target[key], dict) and isinstance(value, dict):
+                MockMemoryRepository._deep_merge(target[key], value)
+            else:
+                target[key] = value
 
     def log_activity(self, activity_data: Dict[str, Any]) -> None:
         with self._lock:

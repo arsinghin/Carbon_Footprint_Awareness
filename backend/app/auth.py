@@ -26,7 +26,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security_he
             uid = token
         else:
             uid = "mock-user-default"
-        logger.info(f"Verified mock auth session for user uid: {uid}")
+        logger.debug("Mock auth session verified")
         return uid
 
     try:
