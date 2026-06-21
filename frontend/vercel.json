@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/v1/:path*",
-      "destination": "https://carbonaware-api.onrender.com/api/v1/:path*"
+      "destination": "https://carbon-footprint-awareness-l7de.onrender.com/api/v1/:path*"
     },
     {
       "source": "/health",
-      "destination": "https://carbonaware-api.onrender.com/health"
+      "destination": "https://carbon-footprint-awareness-l7de.onrender.com/health"
     }
   ]
 }
